@@ -1,0 +1,36 @@
+<servers>
+    <server name="C003508" type="Application">
+        <service name="hpsrv" type="HP Service" />
+        <service name="AdobeFlashPlayerUpdateSvc" type="Adobe Flash Player Update Service" />
+        <service name="gupdatem" type="Google update service" />
+        <loadbalanced status="no" />
+    </server>
+    <server name="David-wintab" type="Application">
+        <service name="hpsrv" type="HP Service" />
+        <service name="AdobeFlashPlayerUpdateSvc" type="Adobe Flash Player Update Service" />
+        <service name="gupdatem" type="Google update service" />
+        <loadbalanced status="no" />
+    </server>
+    <server name="C003508PI" type="Application">
+        <service name="gupdatem" type="HP Service" />
+        <loadbalanced status="no" />
+    </server>
+    <server name="USTSMVSCVTC225" type="Application">
+        <service name="Tomcat7" type="TrackWise Tomcat Application Server" />
+        <service name="Tomcat7WS" type="Web Services Tomcat" />
+        <service name="Tomcat7QMD" type="QMD Application Tomcat" />
+        <service name="TWC" type="TrackWise Coordinator" />
+        <service name="TW_ID_IMPORT" type="ID PR Import Service" />
+        <service name="TW_KEYSTONE_IMPORT" type="Keystone PR Import Service" />
+        <loadbalanced status="no" />
+    </server>
+        <server name="USTSMVSCVTC226" type="Application">
+        <service name="Tomcat7" type="TrackWise Tomcat Application Server" />
+        <service name="Tomcat7WS" type="Web Services Tomcat" />
+        <service name="Tomcat7QMD" type="QMD Application Tomcat" />
+        <service name="TWC" type="TrackWise Coordinator" />
+        <service name="TW_ID_IMPORT" type="ID PR Import Service" />
+        <service name="TW_KEYSTONE_IMPORT" type="Keystone PR Import Service" />
+        <loadbalanced status="no" />
+    </server>
+</servers>

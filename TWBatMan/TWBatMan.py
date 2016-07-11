@@ -8,73 +8,69 @@ TrackWise Services Management Utility
 # from urllib.request import urlopen
 import sys
 from server.server import Server
-from screen import ui
-from tkinter import Tk
+from tkinter import Tk, StringVar, Menu, W
+from tkinter.ttk import Label, LabelFrame, Button
 
 #
 # Initialize the presentation routines
 #
-root = Tk()
-# uscreen = ui.Ui(root)
+win = Tk()
 
-#===============================================================================
-# def menu(server):
-#     ''' Handle the menu and processing '''
-#     
-#     mymess = []
-#     countup, countdown = 0, 0
-#     # screen.drawheader(server.gethostname(), server.gettype())
-#         
-#     # print ("{} Services defined".format(len(services)))
-#     services = server.getservices()
-#     mymess.append("Services Defined: {}".format(len(services)))
-#     
-#     for sname in services:
-#         if server.service_status(sname) == 1:
-#             status = "RUNNING"
-#             countup += 1
-#         else:
-#             status = "STOPPED"
-#             countdown += 1
-#             
-#         # print("Service {} is {}".format(sname, status))
-#         
-#     su = 'service is' if countup == 1 else 'services are'
-#     sd = 'service is' if countdown == 1 else 'services are'
-#     # print ("{0} {2} up - {1} {3} down".format(countup, countdown, su, sd))
-#     # mymess.append("{0} {2} up - {1} {3} down".format(countup, countdown, su, sd))
-#     mymess.append("Services Up: {}".format(countup))
-#     mymess.append("Services Down: {}".format(countdown))
-#     mymess.append("Load Balancer Status: ")
-#     #screen.drawsstate(mymess)
-#     #choice = screen.drawoptions()
-#     
-#     return(choice)
-#===============================================================================
+#
+# Global textvariables
+#  
+snv = StringVar()
+stv = StringVar()
+lbv = StringVar()
+
+#
+# Routines to do the screen handling
+#
+def serverpanel(server):
+    ''' Draws the top panel with the server information '''
+    serverpanel = LabelFrame(win, text = "Server Details")
+    serverpanel.grid(column = 0, row = 0, padx = 5, pady = 5)
+    snamelbl = Label(serverpanel, text = "Server Name: ").grid(column = 0, row = 0, sticky = W)
+    stypelbl = Label(serverpanel, text = "Server Type: ").grid(column = 0, row = 1, sticky = W)
+    loadballbl = Label(serverpanel, text = "Load Balancer Status: ").grid(column = 0, row = 2, sticky = W)
+    sname = Label(serverpanel, textvariable = snv).grid(column = 1, row = 0, sticky = W)
+    stype = Label(serverpanel, textvariable = stv ).grid(column = 1, row = 1, sticky = W)
+    loadbal = Label(serverpanel, textvariable = lbv).grid(column = 1, row = 2, sticky = W)
+    serverstatus(server)
+
+def serverstatus(server):
+    ''' Sets the  server status text variables ''' 
+    snv.set(server.gethostname())
+    stv.set(server.gettype())
+    lbv.set("Future Release")
+    
+
+def servicepanel():
+    ''' Draws the panel with the service information '''
+    servicepanel = LabelFrame(win, text = "Service Details")
+    servicepanel.grid(column = 0, row = 1, padx = 5, pady = 5)
+
+def buttonpanel():
+    ''' Draws the panel with the buttons at the bottom '''
+    pass
+
+def menubar():
+    ''' Draws the menu bar '''
 
 def main():
-    
-    #
-    # Parse the XML service details and get the services for this hostname
-    #
-    #services = ET.parse("twbatman.xml")
-    #root = services.getroot()
-    #hostname = gethostname()
-    #servertype, services = get_services(root, hostname)
 
+    #
+    # Initialize the server object
+    #
     server = Server()
-    uscreen = ui.Ui(root, server)
-    #===========================================================================
-    # hostname = server.gethostname()
-    # servertype = server.gettype()
-    # servicelist = server.getservices()
-    #===========================================================================
+    
+    menubar()
+    serverpanel(server)
+    servicepanel()
+    buttonpanel()
+   
+    win.mainloop()
 
-    root.mainloop()
-    
-    #while menu(server):
-    #    pass
-    
     sys.exit(0)
     
 

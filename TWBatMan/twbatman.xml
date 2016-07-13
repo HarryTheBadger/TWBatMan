@@ -1,14 +1,15 @@
 <servers>
     <server name="C003508" type="Application">
         <service name="hpsrv" type="HP Service" />
-        <service name="AdobeFlashPlayerUpdateSvc" type="Adobe Flash Player Update Service" />
-        <service name="gupdatem" type="Google update service" />
+        <service name="AdobeARMservice" type="Adobe Update Service" />
+        <service name="MySQL56" type="MySQL" />
+        <service name="PerfectStranger" type="Completely Strange" />
         <loadbalanced status="no" />
     </server>
     <server name="David-wintab" type="Application">
         <service name="hpsrv" type="HP Service" />
         <service name="AdobeFlashPlayerUpdateSvc" type="Adobe Flash Player Update Service" />
-        <service name="gupdatem" type="Google update service" />
+        <service name="MySQL56" type="MySQL" />
         <loadbalanced status="no" />
     </server>
     <server name="C003508PI" type="Application">

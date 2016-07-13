@@ -1,5 +1,5 @@
 from tkinter import Tk, Text, BOTH, RIGHT, TOP, X, N, LEFT, RAISED, Listbox, StringVar, END, Menu, W, Message
-from tkinter.ttk import Frame, Button, Style, Label, Entry 
+from tkinter.ttk import Frame, Button, Style, Label, Entry, Labelframe
 
 class Ui(Frame):
     """The user interface class"""
@@ -14,7 +14,7 @@ class Ui(Frame):
     def initUI(self, server):
       
         self.parent.title("TrackWise Service Manager")
-        self.pack(fill=BOTH, expand = True)
+        self.pack(fill=BOTH, expand = True, padx = 300)
         # self.centerWindow()
 
         menubar = Menu(self.parent)
@@ -32,16 +32,30 @@ class Ui(Frame):
 
         # svcs = ['TrackWise Tomcat', 'Web Services Tomcat', 'QMD Tomcat', 'Keystone Intake', 'ID Intake', 'TWC']
         svcs = server.getservices()
+        hostname = server.gethostname().strip()
+        servertype = server.gettype().strip()
 
-        frame1 = Frame(self, borderwidth = 1)
-        frame1.pack(fill = X, anchor = W)
+        frame0 = Labelframe(self, text = "Server Details",  borderwidth = 1)
+        frame0.grid(column = 0, row = 0, sticky = W)
+        
+        so = StringVar()
+        svroverview = Message(frame0, textvariable = so, anchor = W, width = 300)
+        svroverview.grid(column = 0, row = 0)
+        sstr = "Server: {}\n".format(hostname)
+        sstr += "Server Type: {}".format(servertype)
+        so.set(sstr)
+        
+        
+        frame1 = Labelframe(self, text = "Service Status", borderwidth = 1)
+        frame1.grid(column = 0, row = 1, sticky = W)
+
 
         l = StringVar()
         label1 = Message(frame1, textvariable = l , anchor = W)
         
         svcscount = 0
 
-        lstr = "Service Status\n\n"
+        lstr = ""
 
         for i in svcs:
             svcscount += 1 
@@ -52,11 +66,11 @@ class Ui(Frame):
         label1.pack(side=TOP, padx = 5, pady = 5)   
 
         frame4 = Frame(self, relief=RAISED, borderwidth = 1)
-        frame4.pack(fill = X)
+        frame4.grid(column = 0, row = 2, sticky = W)
         closeButton = Button(frame4, text="Close", command = self.quit)
-        closeButton.pack(side = RIGHT, padx = 5, pady = 5)
+        closeButton.grid(column = 0, row = 0)
         okButton = Button(frame4, text = "OK")
-        okButton.pack(side = RIGHT) 
+        okButton.grid(column = 1, row = 0)
 
     def onSelect(self, val):
         sender = val.widget

@@ -10,8 +10,8 @@ import sys
 from server.server import Server
 from tkinter import Tk, StringVar, Menu, W, E
 from tkinter.ttk import Label, LabelFrame, Button
-import logging
-import time as t
+# import logging
+# import time as t
 # logger = logging.getLogger('TWBatMan')
 # logger.setLevel(logging.DEBUG)
 # logfh = logging.FileHandler('TWBatMan.log')
@@ -48,19 +48,19 @@ def serverpanel(server):
     ''' Draws the top panel with the server information '''
     serverpanel = LabelFrame(win, text = "Server Details")
     serverpanel.grid(column = 0, row = 0, padx = 5, pady = 5, sticky = W+E)
-    snamelbl = Label(serverpanel, text = "Server Name: ").grid(column = 0, row = 0, sticky = W)
-    stypelbl = Label(serverpanel, text = "Server Type: ").grid(column = 0, row = 1, sticky = W)
-    loadballbl = Label(serverpanel, text = "Load Balancer Status: ").grid(column = 0, row = 2, sticky = W)
-    sname = Label(serverpanel, textvariable = snv).grid(column = 1, row = 0, sticky = W)
-    stype = Label(serverpanel, textvariable = stv ).grid(column = 1, row = 1, sticky = W)
-    loadbal = Label(serverpanel, textvariable = lbv).grid(column = 1, row = 2, sticky = W)
+    Label(serverpanel, text = "Server Name: ").grid(column = 0, row = 0, sticky = W)
+    Label(serverpanel, text = "Server Type: ").grid(column = 0, row = 1, sticky = W)
+    Label(serverpanel, text = "Load Balancer Status: ").grid(column = 0, row = 2, sticky = W)
+    Label(serverpanel, textvariable = snv).grid(column = 1, row = 0, sticky = W)
+    Label(serverpanel, textvariable = stv ).grid(column = 1, row = 1, sticky = W)
+    Label(serverpanel, textvariable = lbv).grid(column = 1, row = 2, sticky = W)
     serverstatus(server)
 
 def serverstatus(server):
     ''' Sets the  server status text variables ''' 
     snv.set(server.gethostname())
     stv.set(server.gettype())
-    lbv.set("Future Release")
+    lbv.set(server.lbstatus())
     
 
 def servicepanel(server):
@@ -118,6 +118,13 @@ def buttonpanel():
     Button(butpanel, text = "Stop Services", command = onStop).grid(column = 0, row = 0)
     Button(butpanel, text = "Start Services", command = onStart).grid(column = 1, row = 0)
     Button(butpanel, text = "Refresh List", command = onStatus).grid(column = 2, row = 0)
+    
+    if server.lbalanced.upper() == "YES":
+        # lbutpanel = LabelFrame(win, text = "")
+        # lbutpanel.grid(column = 0, row = 3, padx = 5, pady = 5, sticky = W+E)
+        Button(butpanel, text = "Stop Load Balancer", command = lbStop).grid(column = 0, row = 1)
+        Button(butpanel, text = "Start Load Balancer", command = lbStart).grid(column = 1, row = 1)
+        
 
 def menubar(server):
     ''' Draws the menu bar '''
@@ -132,8 +139,23 @@ def menubar(server):
     svcsMenu.add_command(label = "Start Services", command = onStart)
     menubar.add_cascade(label = "Services", menu = svcsMenu)
     
+    if server.lbalanced.upper() == "YES":
+        lbMenu = Menu(menubar)
+        menubar.add_cascade(label = "Load Balancer", menu = lbMenu)
+        lbMenu.add_command(label = "Stop Load Balancer", command = lbStop)
+        lbMenu.add_command(label = "Start Load Balancer", command = lbStart)
+    
     win.config(menu = menubar)
-      
+
+def lbStop():
+    ''' Stop the load balancer '''
+    server.lbStop()
+    lbv.set(server.lbstatus())
+
+def lbStart():
+    ''' Start the load balancer '''
+    server.lbStart()
+    lbv.set(server.lbstatus())    
 
 def main():
 

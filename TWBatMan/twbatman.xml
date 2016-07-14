@@ -4,7 +4,7 @@
         <service name="AdobeARMservice" type="Adobe Update Service" />
         <service name="MySQL56" type="MySQL" />
         <service name="PerfectStranger" type="Completely Strange" />
-        <loadbalanced status="no" />
+        <loadbalanced status="fruit" />
     </server>
     <server name="David-wintab" type="Application">
         <service name="hpsrv" type="HP Service" />

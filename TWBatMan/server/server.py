@@ -1,4 +1,7 @@
 from subprocess import CalledProcessError
+import os.path
+import sys
+
 class Server(object):
     """Handles retreiving all the information about a server and its services"""
 
@@ -16,6 +19,8 @@ class Server(object):
         root = services.getroot()
         self.hostname = gethostname()
         self.servertype, self.services = self._get_services(root, self.hostname)
+        self.lbalanced = self._get_loadbalanced(root, self.hostname)
+        self._loadbalancer = "C:\TrackWiseWeb\monitor.htm"
 
     def gethostname(self):
         return self.hostname
@@ -25,9 +30,41 @@ class Server(object):
 
     def getservices(self):
         return self.services
+    
+    def _get_loadbalanced(self, root, hostname):
+        for s in root.iter('server'):
+            if s.attrib['name'] == hostname:
+                for t in s:
+                    # print(t.tag, t.attrib)
+                    if t.tag == 'loadbalanced':
+                        # print("sc query " + t.attrib['name'])
+                        return(t.attrib['status'])
+        return("Load Balancer Not Found")
+    
+    def lbstatus(self):
+        if self.lbalanced.upper() == "YES":
+            # Check if the load balancer is up or down
+            if os.path.isfile(self._loadbalancer):
+                return("UP")
+            else: 
+                return("DOWN")
+        else:
+            return("NOT LOAD BALANCED")
+     
+    def lbStop(self):
+        try: 
+            os.rename(self._loadbalancer, self._loadbalancer.replace('.', '_'))
+        except:
+            e = sys.exc_info()[0]     
+        
+    def lbStart(self):
+        try:
+            os.rename(self._loadbalancer.replace('.', '_'), self._loadbalancer)    
+        except:
+            e = sys.exc_info()[0]      
 
     def _get_services(self, root, hostname):
-        ''' Gets all the server and services information frmo the XML file for this host name '''
+        ''' Gets all the server and services information from the XML file for this host name '''
 
         servicelist = []
         for s in root.iter('server'):

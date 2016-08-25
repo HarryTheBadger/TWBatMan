@@ -82,7 +82,7 @@ class Server(object):
         from subprocess import check_output 
 
         try:
-            for line in check_output("sc query " + sname, shell=True).decode().split('\n'):
+            for line in self._serviceOp("query", sname)::
                 words = line.split()
     
                 if len(words) > 0 and words[0] == 'STATE':
@@ -94,7 +94,7 @@ class Server(object):
     def startService(self, sname):
         from subprocess import check_output 
         try:
-            for line in check_output("sc start " + sname, shell=True).decode().split('\n'):
+            for line in self._serviceOp("start", sname)::
                 words = line.split()
                 if len(words) > 0 and words[0] == 'STATE':
                     return(words[3])
@@ -107,7 +107,7 @@ class Server(object):
         import time as t
         
         try:
-            check_output("sc stop " + sname, shell=True).decode().split('\n')
+            self._serviceOp("stop", sname):
             tcount = 0
             while 'PENDING' in self.onStatus(sname) and tcount < 5:
                 t.sleep(5) 
@@ -140,7 +140,7 @@ class Server(object):
         from subprocess import check_output
         
         try:
-            for line in check_output("sc queryex " + sname, shell=True).decode().split('\n'):
+            for line in self._serviceOp("queryex", sname):
                 words = line.split()
     
                 if len(words) > 0 and words[0] == 'PID':
@@ -149,5 +149,12 @@ class Server(object):
         except CalledProcessError:
             return("Service Not Found")
         
-               
+    def _serviceOp(self, opo, sname): 
+        from subprocess import check_output
+        
+        try:
+            return check_output('sc ' + opo + ' "' + sname + '"', shell=True).decode().split('\n')   
+        
+        except CalledProcessError:
+            return("Service Not Found")       
             
